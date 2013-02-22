@@ -6,7 +6,7 @@ class Game:
     def __init__(self, interface, players):
         self.interface = interface
         self.playing = True
-        self.winnder = None
+        self.winner = None
         self.board = Board(self.interface)
 
         self.players = [
@@ -31,12 +31,11 @@ class Game:
                 move = None
                 while move is None:
                     move = self._move(player)
-                print('Got move {}'.format(move))
                 self.board.printBoard()
-
-                if self.board.moveWon(move):
-                    self.playing = False
+                if self.board.playerWon(player.color):
                     self.winner = player
+                    self.playing = False
+                    break
         self.endGame()
 
     def endGame(self):
