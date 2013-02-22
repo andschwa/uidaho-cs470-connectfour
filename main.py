@@ -24,7 +24,7 @@ def main():
 
     try:
         the_interface = interface.GUI()
-    except:
+    except NotImplementedError:
         the_interface = interface.CLI()
 
     the_game = Game(the_interface, options.players)
