@@ -3,15 +3,13 @@ class Player:
         self.color = color
         self.interface = interface
 
-    def getmove(self):
+    def getMove(self):
         raise NotImplementedError
 
 class Computer(Player):
-    def getmove(self):
+    def getMove(self):
         raise NotImplementedError
 
 class Human(Player):
-    def getmove(self):
-        raise NotImplementedError
-        self.interface.printBoard()
-        #return self.interface.askMove()
+    def getMove(self):
+        return self.interface.askMove(self.color)
