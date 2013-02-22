@@ -24,9 +24,9 @@ class Game:
             colors.remove(self.players[0].color)
             return colors[0]
 
-    def _move(self, player):
+    def _move(self, player, board):
         try:
-            column = player.getMove()
+            column = player.getMove(board)
             move = self.board.makeMove(column, player.color)
         except InvalidMoveError:
             return None
@@ -38,7 +38,7 @@ class Game:
             for player in self.players:
                 move = None
                 while move is None:
-                    move = self._move(player)
+                    move = self._move(player, self.board)
                 self.board.printBoard()
                 if self.board.playerWon(player.color):
                     self.winner = player
