@@ -56,11 +56,18 @@ class CLI(Interface):
         print('|' + '|'.join(str(i) for i in range(the_board.width)) + '|')
         print()
 
+    def _exit(self):
+            print('Goodbye cruel world.')
+            sys.exit(0)
+
     def askMove(self, color):
-        input_ = input(self.ask_string.format(color))
+        try:
+            input_ = input(self.ask_string.format(color))
+        except KeyboardInterrupt:
+            self._exit()
         print()
         if input_ == 'exit':
-            sys.exit(0)
+            self._exit()
         try:
             return int(input_)
         except:
