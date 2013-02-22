@@ -47,5 +47,12 @@ class Board:
                     return True
         return False
 
+    def isFull(self):
+        for x in range(self.width):
+            for y in range(self.height):
+                if self.board[x][y] is None:
+                    return False
+        return True
+
     def printBoard(self):
         self.interface.printBoard(self)

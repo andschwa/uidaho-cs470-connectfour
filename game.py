@@ -36,9 +36,16 @@ class Game:
                     self.winner = player
                     self.playing = False
                     break
+                if self.board.isFull():
+                    self.winner = None
+                    self.playing = False
+                    break
         self.endGame()
 
     def endGame(self):
-        print('Player {} won!'.format(self.winner.color))
+        if self.winner is None:
+            print('It was a draw!')
+        else:
+            print('Player {} won!'.format(self.winner.color))
         self.board.printBoard()
 
