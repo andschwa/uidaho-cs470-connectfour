@@ -24,27 +24,26 @@ class Board:
                 return index
         raise InvalidMoveError
 
-    def moveWon(self, move):
-        x, y = move
+    def playerWon(self, color):
         # horizontal
         for x in range(self.width - 3):
             for y in range(self.height):
-                if self.board[x][y] == move and self.board[x+1][y] == move and self.board[x+2][y] == move and self.board[x+3][y] == move:
+                if self.board[x][y] == color and self.board[x+1][y] == color and self.board[x+2][y] == color and self.board[x+3][y] == color:
                     return True
         # vertical
         for x in range(self.width):
             for y in range(self.height - 3):
-                if self.board[x][y] == move and self.board[x][y+1] == move and self.board[x][y+2] == move and self.board[x][y+3] == move:
+                if self.board[x][y] == color and self.board[x][y+1] == color and self.board[x][y+2] == color and self.board[x][y+3] == color:
                     return True
         # / diagonal
         for x in range(self.width - 3):
             for y in range(3, self.height):
-                if self.board[x][y] == move and self.board[x+1][y-1] == move and self.board[x+2][y-2] == move and self.board[x+3][y-3] == move:
+                if self.board[x][y] == color and self.board[x+1][y-1] == color and self.board[x+2][y-2] == color and self.board[x+3][y-3] == color:
                     return True
         # \ diagonal
         for x in range(self.width - 3):
             for y in range(self.height - 3):
-                if self.board[x][y] == move and self.board[x+1][y+1] == move and self.board[x+2][y+2] == move and self.board[x+3][y+3] == move:
+                if self.board[x][y] == color and self.board[x+1][y+1] == color and self.board[x+2][y+2] == color and self.board[x+3][y+3] == color:
                     return True
         return False
 
