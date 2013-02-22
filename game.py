@@ -1,20 +1,28 @@
+from random import choice
+
 from board import Board
 from error import *
 from player import Human, Computer
 
+
 class Game:
-    def __init__(self, interface, players):
+    def __init__(self, interface, colors, player_types):
         self.interface = interface
         self.playing = True
         self.winner = None
+        self.colors = colors
         self.board = Board(self.interface)
+        self.players = []
+        for player in player_types:
+            self.players.append(eval(player)(self._getColor(), self.interface))
 
-        self.players = [
-                Human('red', self.interface),
-                Human('black', self.interface)]
-
-    def newGame(self):
-        raise NotImplementedError
+    def _getColor(self):
+        if not self.players:
+            return choice(self.colors)
+        else:
+            colors = list(self.colors)
+            colors.remove(self.players[0].color)
+            return colors[0]
 
     def _move(self, player):
         try:
@@ -25,7 +33,7 @@ class Game:
         return move
 
     def play(self):
-        self.board.printBoard()
+        self.interface.newGame(self.players, self.board)
         while self.playing:
             for player in self.players:
                 move = None
@@ -40,12 +48,4 @@ class Game:
                     self.winner = None
                     self.playing = False
                     break
-        self.endGame()
-
-    def endGame(self):
-        if self.winner is None:
-            print('It was a draw!')
-        else:
-            print('Player {} won!'.format(self.winner.color))
-        self.board.printBoard()
-
+        self.interface.endGame(self.winner, self.board)

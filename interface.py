@@ -3,37 +3,60 @@ import sys
 from error import *
 
 class Interface:
-    def __init__(self):
-        pass
-    def printBoard(self):
-        raise NotImplementedError
-    def askMove(self):
-        raise NotImplementedError
+    def __init__(self, colors):
+        self.colors = colors
+
+    def printBoard(self): raise NotImplementedError
+    def askMove(self): raise NotImplementedError
 
 class GUI(Interface):
-    def __init__(self):
+    def __init__(self, colors):
         raise NotImplementedError
 
 class CLI(Interface):
-    def __init__(self):
+    def __init__(self, colors):
+        super().__init__(colors)
         self.ask_string = "Player {}, in which column would you like to play? "
+
+    def _getSymbol(self, color):
+        if color == self.colors[0]:
+            return '#'
+        if color == self.colors[1]:
+            return '*'
+
+    def newGame(self, players, board):
+        welcome_string = "Welcome players: {} is '{}', and {} is '{}'.\n"
+        print(welcome_string.format(
+            players[0].color, self._getSymbol(players[0].color),
+            players[1].color, self._getSymbol(players[1].color)))
+        board.printBoard()
+        print('Your columns are 0 to 6, left to right.\n')
+
+    def endGame(self, winner, board):
+        if winner is None:
+            print('It was a draw!')
+        else:
+            print('Player {} won!'.format(winner.color))
+        board.printBoard()
 
     def printBoard(self, the_board):
         for row in range(the_board.height-1, -1, -1):
             print('|', end='')
             for column in range(the_board.width):
                 space = the_board.board[column][row]
-                if space == 'red':
-                    print('#', end='')
-                if space == 'black':
-                    print('*', end='')
+                if space == self.colors[0]:
+                    print(self._getSymbol(self.colors[0]), end='')
+                if space == self.colors[1]:
+                    print(self._getSymbol(self.colors[1]), end='')
                 if space is None:
                     print(' ', end='')
                 print('|', end='')
             print()
+        print()
 
     def askMove(self, color):
         input_ = input(self.ask_string.format(color))
+        print()
         if input_ == 'exit':
             sys.exit(0)
         try:

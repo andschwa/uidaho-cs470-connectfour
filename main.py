@@ -12,22 +12,27 @@ from game import Game
 def eatargs():
     parser = argparse.ArgumentParser(description='Play Connect Four!')
     parser.add_argument('--versus', dest='players', action='store_const',
-            const=['human', 'human'], help='Play as two humans!')
+            const=['Human', 'Human'], help='Play as two Humans!')
     parser.add_argument('--solo', dest='players', action='store_const',
-            const=['human', 'computer'], help='Play as two humans!')
+            const=['Human', 'Computer'], help='Play as two Humans!')
     parser.add_argument('--auto', dest='players', action='store_const',
-            const=['computer', 'computer'], help='Play as two computers!')
-    return parser
+            const=['Computer', 'Computer'], help='Play as two Computers!')
+    options = parser.parse_args()
+    return options
 
 def main():
-    options = eatargs().parse_args()
+    options = eatargs()
+    players = options.players
+    if players is None:
+        players = ['Human', 'Human']
+    colors = ('red', 'black')
 
     try:
-        the_interface = interface.GUI()
+        the_interface = interface.GUI(colors)
     except NotImplementedError:
-        the_interface = interface.CLI()
+        the_interface = interface.CLI(colors)
 
-    the_game = Game(the_interface, options.players)
+    the_game = Game(the_interface, colors, players)
 
     the_game.play()
 
