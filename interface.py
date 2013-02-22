@@ -25,12 +25,12 @@ class CLI(Interface):
             return '*'
 
     def newGame(self, players, board):
-        welcome_string = "Welcome players: {} is '{}', and {} is '{}'.\n"
+        welcome_string = "Welcome players: {} is '{}', and {} is '{}'."
         print(welcome_string.format(
             players[0].color, self._getSymbol(players[0].color),
             players[1].color, self._getSymbol(players[1].color)))
         board.printBoard()
-        print('Your columns are 0 to 6, left to right.\n')
+        print('Your columns are 0 to 6, left to right.')
 
     def endGame(self, winner, board):
         if winner is None:
@@ -40,6 +40,7 @@ class CLI(Interface):
         board.printBoard()
 
     def printBoard(self, the_board):
+        print()
         for row in range(the_board.height-1, -1, -1):
             print('|', end='')
             for column in range(the_board.width):
@@ -52,6 +53,7 @@ class CLI(Interface):
                     print(' ', end='')
                 print('|', end='')
             print()
+        print('|' + '|'.join(str(i) for i in range(the_board.width)) + '|')
         print()
 
     def askMove(self, color):
