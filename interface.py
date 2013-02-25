@@ -6,6 +6,17 @@ from error import *
 class Interface:
     def __init__(self, colors):
         self.colors = colors
+        self.options = self.eatargs()
+
+    def eatargs(self):
+        parser = argparse.ArgumentParser(description='Play Connect Four!')
+        parser.add_argument('--versus', dest='players', action='store_const',
+                const=['Human', 'Human'], help='Play as two Humans!')
+        parser.add_argument('--solo', dest='players', action='store_const',
+                const=['Human', 'Computer'], help='Play as two Humans!')
+        parser.add_argument('--auto', dest='players', action='store_const',
+                const=['Computer', 'Computer'], help='Play as two Computers!')
+        return parser.parse_args()
 
     def printBoard(self): raise NotImplementedError
     def askMove(self): raise NotImplementedError
@@ -19,19 +30,11 @@ class CLI(Interface):
         super().__init__(colors)
         self.ask_string = "Player {}, in which column would you like to play? "
 
-    def eatargs(self):
-        parser = argparse.ArgumentParser(description='Play Connect Four!')
-        parser.add_argument('--versus', dest='players', action='store_const',
-                const=['Human', 'Human'], help='Play as two Humans!')
-        parser.add_argument('--solo', dest='players', action='store_const',
-                const=['Human', 'Computer'], help='Play as two Humans!')
-        parser.add_argument('--auto', dest='players', action='store_const',
-                const=['Computer', 'Computer'], help='Play as two Computers!')
-        options = parser.parse_args()
-        if options.players is None:
-            options.players = ['Human', 'Human']
-
-        return options.players
+    def getPlayers(self):
+        players = self.options.players
+        if players is None:
+            players = ['Human', 'Human']
+        return players
 
     def _getSymbol(self, color):
         if color == self.colors[0]:

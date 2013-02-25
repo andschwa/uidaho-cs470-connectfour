@@ -17,7 +17,7 @@ def main():
     except NotImplementedError:
         the_interface = interface.CLI(colors)
 
-    players = the_interface.eatargs()
+    players = the_interface.getPlayers()
 
     the_game = Game(the_interface, colors, players)
 
