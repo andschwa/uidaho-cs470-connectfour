@@ -95,6 +95,11 @@ class Minimax():
                 consecutiveCount += 1
             else:
                 break
+        for i in range(row, 0, -1):
+            if state[col][i] == state[col][row]:
+                consecutiveCount += 1
+            else:
+                break
 
         if consecutiveCount >= streak:
             return 1
@@ -104,6 +109,11 @@ class Minimax():
     def horizontal_streak(self, col, row, state, streak):
         consecutiveCount = 0
         for j in range(col, self.board.width):
+            if state[j][row] == state[col][row]:
+                consecutiveCount += 1
+            else:
+                break
+        for j in range(col, 0, -1):
             if state[j][row] == state[col][row]:
                 consecutiveCount += 1
             else:
