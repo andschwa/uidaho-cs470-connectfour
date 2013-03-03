@@ -10,10 +10,12 @@ class Board:
         for _ in range(self.width):
             self.board.append([None] * self.height)
 
-    def valid_move(self, column):
+    def valid_move(self, column, board=None):
+        if board is None:
+            board = self.board
         if column < self.width:
             row = self._next_lowest(column)
-            if self.board[column][row] is None:
+            if board[column][row] is None:
                 return row
         else:
             return None
