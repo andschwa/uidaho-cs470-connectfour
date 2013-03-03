@@ -1,4 +1,4 @@
-import random
+from algorithms import Minimax
 
 
 class Player:
@@ -11,11 +11,14 @@ class Player:
 
 
 class Computer(Player):
-    def __init__(self, color, interface):
+    def __init__(self, color, interface, difficulty=10):
         super().__init__(color, interface)
+        self.difficulty = difficulty
 
     def get_move(self, board):
-        return random.randint(0, board.width)
+        algorithm = Minimax(board)
+        move, value = algorithm.best_most(self.color, self.difficulty)
+        return move
 
 
 class Human(Player):
