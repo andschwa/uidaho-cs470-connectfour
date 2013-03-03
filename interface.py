@@ -1,72 +1,81 @@
 import argparse
 import sys
 
-from error import *
+import error
+
 
 class Interface:
     def __init__(self, colors):
         self.colors = colors
-        self.options = self.eatargs()
+        self.options = self.eat_args()
 
-    def eatargs(self):
+    def eat_args(self):
         parser = argparse.ArgumentParser(description='Play Connect Four!')
-        parser.add_argument('--versus', dest='players', action='store_const',
-                const=['Human', 'Human'], help='Play as two Humans!')
-        parser.add_argument('--solo', dest='players', action='store_const',
-                const=['Human', 'Computer'], help='Play as two Humans!')
-        parser.add_argument('--auto', dest='players', action='store_const',
-                const=['Computer', 'Computer'], help='Play as two Computers!')
+        parser.add_argument(
+            '--versus', dest='players', action='store_const',
+            const=['Human', 'Human'], help='Play as two Humans!')
+        parser.add_argument(
+            '--solo', dest='players', action='store_const',
+            const=['Human', 'Computer'], help='Play as two Humans!')
+        parser.add_argument(
+            '--auto', dest='players', action='store_const',
+            const=['Computer', 'Computer'], help='Play as two Computers!')
         return parser.parse_args()
 
-    def printBoard(self): raise NotImplementedError
-    def askMove(self): raise NotImplementedError
+    def print_board(self):
+        raise NotImplementedError
+
+    def ask_move(self):
+        raise NotImplementedError
+
 
 class GUI(Interface):
     def __init__(self, colors):
         raise NotImplementedError
+
 
 class CLI(Interface):
     def __init__(self, colors):
         super().__init__(colors)
         self.ask_string = "Player {}, in which column would you like to play? "
 
-    def getPlayers(self):
+    def get_players(self):
         players = self.options.players
         if players is None:
             players = ['Human', 'Human']
         return players
 
-    def _getSymbol(self, color):
+    def _get_symbol(self, color):
         if color == self.colors[0]:
             return '#'
         if color == self.colors[1]:
             return '*'
 
-    def newGame(self, players, board):
+    def new_game(self, players, board):
         welcome_string = "Welcome players: {} is '{}', and {} is '{}'."
         print(welcome_string.format(
-            players[0].color, self._getSymbol(players[0].color),
-            players[1].color, self._getSymbol(players[1].color)))
-        board.printBoard()
+            players[0].color, self._get_symbol(players[0].color),
+            players[1].color, self._get_symbol(players[1].color)))
+        board.print_board()
         print('Your columns are 0 to 6, left to right.')
 
-    def endGame(self, winner, board):
+    def end_game(self, winner, board):
         if winner is None:
             print('It was a draw!')
         else:
             print('Player {} won!'.format(winner.color))
-        board.printBoard()
+        board.print_board()
 
-    def printBoard(self, the_board):
+    def print_board(self, the_board):
         print()
         for row in range(the_board.height-1, -1, -1):
             print('|', end='')
             for column in range(the_board.width):
                 space = the_board.board[column][row]
                 if space == self.colors[0]:
-                    print(self._getSymbol(self.colors[0]), end='')
+                    print(self._get_symbol(self.colors[0]), end='')
                 if space == self.colors[1]:
-                    print(self._getSymbol(self.colors[1]), end='')
+                    print(self._get_symbol(self.colors[1]), end='')
                 if space is None:
                     print(' ', end='')
                 print('|', end='')
@@ -78,7 +87,7 @@ class CLI(Interface):
             print('Goodbye cruel world.')
             sys.exit(0)
 
-    def askMove(self, color):
+    def ask_move(self, color):
         try:
             input_ = input(self.ask_string.format(color))
         except KeyboardInterrupt:
@@ -89,4 +98,4 @@ class CLI(Interface):
         try:
             return int(input_)
         except:
-            raise InvalidMoveError
+            raise error.InvalidMoveError

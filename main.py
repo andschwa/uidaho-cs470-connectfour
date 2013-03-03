@@ -4,9 +4,7 @@ import sys
 
 import interface
 
-from error import *
 from game import Game
-
 
 
 def main():
@@ -17,7 +15,7 @@ def main():
     except NotImplementedError:
         the_interface = interface.CLI(colors)
 
-    players = the_interface.getPlayers()
+    players = the_interface.get_players()
 
     the_game = Game(the_interface, colors, players)
 
