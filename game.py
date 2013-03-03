@@ -16,7 +16,7 @@ class Game:
         self.players = []
         for player in player_types:
             self.players.append(
-                eval(player)(self._get_color(), self.interface))
+                eval(player)(self._get_color(), self.colors, self.interface))
 
     def _get_color(self):
         if not self.players:
