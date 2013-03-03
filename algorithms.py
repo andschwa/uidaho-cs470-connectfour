@@ -5,8 +5,7 @@ import error
 
 class Minimax():
     def __init__(self, board, colors):
-        self.board_class = board
-        self.board = self.board_class.board
+        self.board = board
         self.colors = colors
 
     def _other_color(self, color):
@@ -20,14 +19,14 @@ class Minimax():
         depth = difficulty
 
         legal_moves = {}
-        for column in range(self.board_class.width):
-            if self.board_class.valid_move(column) is not None:
-                temp = self.make_fake_move(self.board, column, player)
+        for column in range(self.board.width):
+            if self.board.valid_move(column, self.board.get_board()) is not None:
+                temp = self.make_fake_move(self.board.get_board(), column, player)
                 legal_moves[column] = -self.search(depth-1, temp, opponent)
 
         best_alpha = -99999999
         best_move = None
-        moves = legal_moves.items()
+        moves = list(legal_moves.items())
         random.shuffle(moves)
         for move, alpha in moves:
             if alpha >= best_alpha:
@@ -37,7 +36,7 @@ class Minimax():
         return best_move, best_alpha
 
     def make_fake_move(self, state, column, color):
-        row = self.board_class.valid_move(column, state)
+        row = self.board.valid_move(column, state)
         if row is None:
             raise error.InvalidMoveError
         state[column][row] = color
@@ -46,11 +45,11 @@ class Minimax():
     def search(self, depth, state, player):
         opponent = self._other_color(player)
         legal_moves = []
-        for column in range(self.board_class.width):
-            if self.board_class.valid_move(column, state) is not None:
+        for column in range(self.board.width):
+            if self.board.valid_move(column, state) is not None:
                 legal_moves.append(self.make_fake_move(state, column, player))
 
-        if depth == 0 or not legal_moves or self.game_over(state):
+        if depth == 0 or legal_moves is None or self.game_over(state):
             return self.value(state, player)
 
         alpha = -99999999
@@ -60,13 +59,12 @@ class Minimax():
 
     def check_for_streak(self, state, color, streak):
         streaks = 0
-        # for each piece in the board...
-        for y in range(self.board_class.height):
-            for x in range(self.board_class.width):
-                if state[x][y] == color:
-                    streaks += self.vertical_streak(y, x, state, streak)
-                    streaks += self.horizontal_streak(y, x, state, streak)
-                    streaks += self.diagonal_check(y, x, state, streak)
+        for col in range(self.board.width):
+            for row in range(self.board.height):
+                if state[col][row] == color:
+                    streaks += self.vertical_streak(col, row, state, streak)
+                    streaks += self.horizontal_streak(col, row, state, streak)
+                    streaks += self.diagonal_check(col, row, state, streak)
         return streaks
 
     def game_over(self, state):
@@ -90,10 +88,10 @@ class Minimax():
         else:
             return my_fours*100000 + my_threes*100 + my_twos
 
-    def vertical_streak(self, row, col, state, streak):
+    def vertical_streak(self, col, row, state, streak):
         consecutiveCount = 0
-        for i in range(row, 6):
-            if state[i][col] == state[row][col]:
+        for i in range(row, self.board.height):
+            if state[col][i] == state[col][row]:
                 consecutiveCount += 1
             else:
                 break
@@ -103,10 +101,10 @@ class Minimax():
         else:
             return 0
 
-    def horizontal_streak(self, row, col, state, streak):
+    def horizontal_streak(self, col, row, state, streak):
         consecutiveCount = 0
-        for j in range(col, 7):
-            if state[row][j] == state[row][col]:
+        for j in range(col, self.board.width):
+            if state[j][row] == state[col][row]:
                 consecutiveCount += 1
             else:
                 break
@@ -116,15 +114,15 @@ class Minimax():
         else:
             return 0
 
-    def diagonal_check(self, row, col, state, streak):
+    def diagonal_check(self, col, row, state, streak):
         total = 0
         # check for diagonals with positive slope
         consecutiveCount = 0
         j = col
-        for i in range(row, 6):
+        for i in range(row, self.board.height):
             if j > 6:
                 break
-            elif state[i][j] == state[row][col]:
+            elif state[j][i] == state[col][row]:
                 consecutiveCount += 1
             else:
                 break
@@ -138,7 +136,7 @@ class Minimax():
         for i in range(row, -1, -1):
             if j > 6:
                 break
-            elif state[i][j] == state[row][col]:
+            elif state[j][i] == state[col][row]:
                 consecutiveCount += 1
             else:
                 break
