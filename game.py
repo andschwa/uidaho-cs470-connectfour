@@ -34,8 +34,12 @@ class Game:
             return None
         return move
 
+    def _order_players(self, player):
+        if self.players.index(player) != 0:
+            self.players.reverse()
+
     def play(self):
-        self.interface.new_game(self.players, self.board)
+        self._order_players(self.interface.new_game(self.players, self.board))
         while self.playing:
             for player in self.players:
                 move = None

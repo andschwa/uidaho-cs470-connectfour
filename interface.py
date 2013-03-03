@@ -51,6 +51,22 @@ class CLI(Interface):
         if color == self.colors[1]:
             return '*'
 
+    def _ask_first(self, players):
+        color_string = "Which player shall go first: {} or {}? "
+        try:
+            input_ = input(color_string.format(
+                players[0].color, players[1].color))
+        except KeyboardInterrupt:
+            self._exit()
+        if input_ == 'exit':
+            self._exit()
+        for player in players:
+            if input_ == player.color:
+                return player
+        if input_ is '':
+            return players[0]
+        return None
+
     def new_game(self, players, board):
         welcome_string = "Welcome players: {} is '{}', and {} is '{}'."
         print(welcome_string.format(
@@ -58,6 +74,10 @@ class CLI(Interface):
             players[1].color, self._get_symbol(players[1].color)))
         board.print_board()
         print('Your columns are 0 to 6, left to right.')
+        first_player = None
+        while first_player is None:
+            first_player = self._ask_first(players)
+        return first_player
 
     def end_game(self, winner, board):
         if winner is None:
