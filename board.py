@@ -35,7 +35,6 @@ class Board:
 
     def _next_lowest(self, column, board):
         for row, value in enumerate(board[column]):
-            print(row, value)
             if value is None:
                 return row
         return None
