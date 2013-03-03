@@ -1,3 +1,4 @@
+import copy
 import error
 
 
@@ -10,11 +11,16 @@ class Board:
         for _ in range(self.width):
             self.board.append([None] * self.height)
 
+    def get_board(self):
+        return copy.deepcopy(self.board)
+
     def valid_move(self, column, board=None):
         if board is None:
-            board = self.board
+            board = self.get_board()
         if column < self.width:
-            row = self._next_lowest(column)
+            row = self._next_lowest(column, board)
+            if row is None:
+                return None
             if board[column][row] is None:
                 return row
         else:
@@ -27,11 +33,12 @@ class Board:
         self.board[column][row] = color
         return (column, row)
 
-    def _next_lowest(self, column):
-        for index, value in enumerate(self.board[column]):
+    def _next_lowest(self, column, board):
+        for row, value in enumerate(board[column]):
+            print(row, value)
             if value is None:
-                return index
-        raise error.InvalidMoveError
+                return row
+        return None
 
     def player_won(self, color):
         # horizontal
