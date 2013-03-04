@@ -7,6 +7,7 @@ class Minimax():
     def __init__(self, board, colors):
         self.board = board
         self.colors = colors
+        self.max_player = None
 
     def _other_color(self, color):
         colors = list(self.colors)
@@ -15,14 +16,15 @@ class Minimax():
 
     def best_move(self, color, difficulty):
         player = color
+        self.max_player = player
         opponent = self._other_color(color)
         depth = difficulty
 
         legal_moves = {}
         for column in range(self.board.width):
             if self.board.valid_move(column, self.board.get_board()) is not None:
-                temp = self.make_fake_move(self.board.get_board(), column, player)
-                legal_moves[column] = -self.search(depth-1, temp, opponent)
+                state = self.make_fake_move(self.board.get_board(), column, player)
+                legal_moves[column] = -self.search(state, depth-1, opponent)
 
         best_alpha = -99999999
         best_move = None
@@ -42,8 +44,8 @@ class Minimax():
         state[column][row] = color
         return state
 
-    def search(self, depth, state, player):
-        opponent = self._other_color(player)
+    def search(self, state, depth, player, alpha=-99999999, beta=99999999):
+        opp = self._other_color(player)
         legal_moves = []
         for column in range(self.board.width):
             if self.board.valid_move(column, state) is not None:
@@ -52,10 +54,18 @@ class Minimax():
         if depth == 0 or legal_moves is None or self.game_over(state):
             return self.value(state, player)
 
-        alpha = -99999999
-        for move in legal_moves:
-            alpha = max(alpha, -self.search(depth-1, move, opponent))
-        return alpha
+        if player == self.max_player:
+            for move in legal_moves:
+                alpha = max(alpha, -self.search(move, depth-1, opp, alpha, beta))
+                if beta <= alpha:
+                    break
+            return alpha
+        else:
+            for move in legal_moves:
+                beta = min(beta, -self.search(move, depth-1, opp, alpha, beta))
+                if beta <= alpha:
+                    break
+            return beta
 
     def check_for_streak(self, state, color, streak):
         streaks = 0
