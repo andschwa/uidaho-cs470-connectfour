@@ -26,7 +26,6 @@
 \begin{document}
 \maketitle 
 \begin{abstract}
-Abstract
 \end{abstract}
 \pagebreak
 \section{Introduction}
@@ -153,10 +152,10 @@ Player red won!
 |#| |*|#|*|#|*|
 |0|1|2|3|4|5|6|
 \end{verbatim}
-Player red won!
-
 And here the AI took a diagonal win by playing in column 2.
 \begin{verbatim}
+Player red won!
+
 | | | | | | | |
 | | | | | | | |
 | |#|#| | | | |
@@ -170,4 +169,6 @@ And here the AI took a diagonal win by playing in column 2.
 The AI appears to play very well. After tuning the heuristic and increasing the difficulty depth, I cannot beat it. That is coming from a Connect Four champion (of sorts), as I spent endless hours growing up playing with my father, and playing against a handheld computer Connect Four game just like the one I have created here. Although this standpoint is biased, with me being the creator of the program, I honestly think it plays with a human-like intelligence, or so it feels. It is either that, or I play like a computer. It will not yield, and it makes it very difficult to set up traps. When set to play on auto, however, it does not result in a draw, and in fact results in the same ending board each time, which forces me to conclude that it has a weakness, I just have not yet found it.
 
 \section{Conclusion}
+Implemented properly, the minimax algorithm with alpha-beta pruning is an excellent choice of algorithm for deterministic, two-player, zero-sum games, such as Connect Four. Because of the low branching factor in this game, it is rather easy for computers to play optimally. As demonstrated here, it makes for a very human-like artifically intelligent agent, that is difficult if not impossible to best with our less-than optimal minds (in respect to this particular task).
+
 \end{document}
