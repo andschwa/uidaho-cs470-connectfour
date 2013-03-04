@@ -3,7 +3,6 @@
 \usepackage{sectsty}
 \allsectionsfont{\centering \normalfont\scshape}
 \usepackage{fancyhdr}
-\usepackage{graphicx}
 \pagestyle{fancyplain}
 \fancyhead{}
 \fancyfoot[L]{}
@@ -25,25 +24,54 @@
 \date{\normalsize\today}
 
 \begin{document}
-\maketitle % Print the title
+\maketitle 
 \begin{abstract}
 Abstract
 \end{abstract}
 \pagebreak
 \section{Introduction}
-An introduction explaining game playing in general and connect four specifically.
+This project focused on learning game theory through recreating Connect Four. Mathematical game theory is a way of viewing multiagent environments, and is a study of strategic decision making. In particular we are examining competetive environments, which introduces adversarial search problems, also known as games. Connect Four is an example of the artificial intelligence concept of a deterministic, zero-sum game of perfect information, where there are players alternating turns.
+
+Connect Four is a two player game played on a board consisting of seven columns, each six cells high. The goal of the game for a player is to connect four the player's tokens in a row, either horizontally, vertically, or diagonally. Game play is the alternating dropping of tokens into columns, where they must settle at the lowest empty position. It should be noted that it is possible for Connect Four to result in a draw, where every available slot has been filled without either player connecting four tokens.
+
 \section{Algorithm}
-An algorithm section explaining your program. Including,
+Because complex games such as Connect Four are realistically impossible to solve completely due to time constraints, it becomes necessary to maximize the efficiency of the algorithm used to find the optimal move. As such, the need to prune the search tree of unimportant paths and the need to use an evaluation function to approximate a move's value both arise. This project therefore uses a minimax algorithm for the AI, implemented with alpha-beta pruning.
+
 \subsection{Data Structures}
-A description of the major data structures.
+\subsubsection{Main, Interface}
+This is a well organized object-oriented program written in the Python 3 programming language, and adhering to PEP8 standards. The main module simply imports the interface and game modules. It first attempts to create an interface from the GUI class, and failing this, drops back to the CLI class. It then creates two player prototypes according to user input: 'auto' for two computer players, 'versus' for two human players, and 'solo' to play one human against the machine. These player prototypes consist of two base properties: color, and type (that is, whether human or AI). It then builds a new game and passes it the interface, available colors, and the created players. Finally, it asks the game to begin playing.
+
+\subsubsection{Game}
+The game object is relatively simple as it consists of only three short helper methods servicing the main, and relatively simple, play method. It instaniates a new board class and creates two player objects using the properties passed in by main.
+
+Play begins by setting up the "new game", essentially asking the interface to introduce the players, their colors and token representations, explaining how to use the interface, and asking which player will go first. It then loops while gameplay is taking place, alternating turns between the players (using the move helper method to handle exceptions until a valid move is returned by the player's move method), and ending if a win or draw has taken place, afterwards asking the interface to "end the game", that is, announce the winner or the draw, and exit.
+
+\subsubsection{Board}
+The board class is a separate object so as to secure the actual representation of the board from being altered unknowingly. There is a method to get the board which returns a full copy of the board (an operation that inexpensive as the board is a seven by six array of single characters). This was critical due to the lack of control Python gives the programmer over how objects are passed; without this ``getter'' method, it was far too easy to accidentally allow the AI to alter the board itself.
+
+In addition, the board provides methods to determine if it is full (indicating a draw), if a player has won in any direction, if a particular move is valid (that is, a column choice that is both on the board and has at least one empty spot, if valid, it returns the row in which the token would rest), a print method which calls the interface to print out the board, and finally a method to make a move (the only method that is allowed to alter the board, which it does by inserting exactly one piece, and raises an error if that move is invalid).
+
+\subsubsection{Player}
+The player class is simple. The base player class sets the interface for the computer and human sub classes, which consist of a single method to return the player's next move, and holds the player's color. The human class simply calls the interface's ``ask for move'' method. The computer class instaniates an algorithm object from the Minimax class of the algorithms module, sends it the board, player colors, current player, and difficulty level; it then returns the best move as determined by the algorithm.
+
 \subsection{Minimax}
+The minimax algorithm is contained in its own class within the algorithms module. This class is the most critical component of the project. Its ``best move'' method is passed the current player's color and the difficulty setting. It sets up a dictionary of legal moves (one for each column, unless that column is full). It uses a ``make fake move'' method to determine the new board if the move were to be made, and then passes it into the recursive search function. It saves the value for each move in the dictionary, and then finally returns the move with the highest alpha value as the best move for the AI to make.
+
+\subsubsection{Search}
+The search method for the minimax algorithm receives a depth (interpreted as the difficulty of the AI), current board state, and current player (as this alternates while the search takes place, a core part of the need for minimax). It stores the next set of legal moves in a list, each move being represented as the board state for that move (as returned by the ``make fake move'' method).
+
 \subsubsection{Alpha-beta Pruning}
-\subsubsection{Selective Evaluation}
+If the search is terminal (that is, it exhausts its depth limit, or can no longer find moves (a full board) or if the state currently being checked leads to an end game), it returns. Otherwise, for the list of board states in the search method, search is recursively called while comparing max(alpha) and min(beta) values. In this way, suboptimal sections of the search tree are pruned, increasing the efficiency of the algorithm.
+
 \subsubsection{Maximum Search Depth}
-Difficulty
+The depth limit at which the search method returns is interpreted as the difficulty level: the higher the limit, the deeper the search can go, and the better the move the algorithm will return.
+
 \subsubsection{Randomization}
+When determining which move to return as the best move, ties are broken pseudo-randomly. This not only improves the algorithm slightly by reducing the chance an opponent has to learn its patterns, it also gives the AI a more human appearance. This randomization is really only applicable at lower difficulty levels, where there is a greater chance of tied alpha values.
+
 \subsubsection{Evaluation Function}
-The evaluation function used.
+The evaluation function used computes a score for a move as the sum of the values of the number of token streaks that move leads to. Four token streaks are valued at ten thousand, three token streaks at one hundred, and two token streaks at one.
+
 \section{Results}
 A results section. Including,
 \subsection{Output}
