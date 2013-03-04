@@ -26,10 +26,12 @@
 \begin{document}
 \maketitle 
 \begin{abstract}
+For this project I created a Connect Four game, which uses a minimax algorithm with alpha-beta pruning for the AI player. The programming language used is Python (version 3.3), which allowed for an excellent object-oriented design. The current user interface is a simple command-line implementation, though the interface would allow for a graphical implementation without modifying any current code, the GUI class just needs to be implemented. The game can be played in three modes: auto, versus, and solo. When played in solo mode, the minimax algorithm makes beating the computer very difficult.
 \end{abstract}
 \pagebreak
 \section{Introduction}
 This project focused on learning game theory through recreating Connect Four. Mathematical game theory is a way of viewing multiagent environments, and is a study of strategic decision making. In particular we are examining competetive environments, which introduces adversarial search problems, also known as games. Connect Four is an example of the artificial intelligence concept of a deterministic, zero-sum game of perfect information, where there are players alternating turns.
+\\
 
 Connect Four is a two player game played on a board consisting of seven columns, each six cells high. The goal of the game for a player is to connect four the player's tokens in a row, either horizontally, vertically, or diagonally. Game play is the alternating dropping of tokens into columns, where they must settle at the lowest empty position. It should be noted that it is possible for Connect Four to result in a draw, where every available slot has been filled without either player connecting four tokens.
 
@@ -42,11 +44,13 @@ This is a well organized object-oriented program written in the Python 3 program
 
 \subsubsection{Game}
 The game object is relatively simple as it consists of only three short helper methods servicing the main, and relatively simple, play method. It instaniates a new board class and creates two player objects using the properties passed in by main.
+\\
 
 Play begins by setting up the "new game", essentially asking the interface to introduce the players, their colors and token representations, explaining how to use the interface, and asking which player will go first. It then loops while gameplay is taking place, alternating turns between the players (using the move helper method to handle exceptions until a valid move is returned by the player's move method), and ending if a win or draw has taken place, afterwards asking the interface to "end the game", that is, announce the winner or the draw, and exit.
 
 \subsubsection{Board}
 The board class is a separate object so as to secure the actual representation of the board from being altered unknowingly. There is a method to get the board which returns a full copy of the board (an operation that inexpensive as the board is a seven by six array of single characters). This was critical due to the lack of control Python gives the programmer over how objects are passed; without this ``getter'' method, it was far too easy to accidentally allow the AI to alter the board itself.
+\\
 
 In addition, the board provides methods to determine if it is full (indicating a draw), if a player has won in any direction, if a particular move is valid (that is, a column choice that is both on the board and has at least one empty spot, if valid, it returns the row in which the token would rest), a print method which calls the interface to print out the board, and finally a method to make a move (the only method that is allowed to alter the board, which it does by inserting exactly one piece, and raises an error if that move is invalid).
 
