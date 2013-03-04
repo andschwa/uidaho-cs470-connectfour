@@ -96,7 +96,7 @@ class Minimax():
         if opp_fours > 0:
             return -100000
         else:
-            return my_fours*100000 + my_threes*100 + my_twos
+            return my_fours*100000 + my_threes*1000 + my_twos*10
 
     def vertical_streak(self, col, row, state, streak):
         consecutiveCount = 0
