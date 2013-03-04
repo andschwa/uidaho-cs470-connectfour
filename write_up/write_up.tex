@@ -70,17 +70,104 @@ The depth limit at which the search method returns is interpreted as the difficu
 When determining which move to return as the best move, ties are broken pseudo-randomly. This not only improves the algorithm slightly by reducing the chance an opponent has to learn its patterns, it also gives the AI a more human appearance. This randomization is really only applicable at lower difficulty levels, where there is a greater chance of tied alpha values.
 
 \subsubsection{Evaluation Function}
-The evaluation function used computes a score for a move as the sum of the values of the number of token streaks that move leads to. Four token streaks are valued at ten thousand, three token streaks at one hundred, and two token streaks at one.
+The evaluation function used computes a score for a move as the sum of the values of the number of token streaks that move leads to. Four token streaks are valued at ten thousand, three token streaks at one thousand, and two token streaks at ten.
 
 \section{Results}
-A results section. Including,
 \subsection{Output}
-Samples of the program's output. 
-\subsubsection{Blocking a Win}
+\subsubsection{Display of a new game}
+\begin{verbatim}
+Welcome players: red is '#', and black is '*'.
+
+| | | | | | | |
+| | | | | | | |
+| | | | | | | |
+| | | | | | | |
+| | | | | | | |
+| | | | | | | |
+|0|1|2|3|4|5|6|
+
+Your columns are 0 to 6, left to right.
+Which player shall go first: red or black? black
+\end{verbatim}
+
+\subsubsection{Blocking a Win (vertical)}
+Here the AI played column 3 to block the vertical streak.
+\begin{verbatim}
+| | | | | | | |
+| | | | | | | |
+| | | |*| | | |
+| | | |#| | | |
+| | | |#| | | |
+| | |*|#| |*| |
+|0|1|2|3|4|5|6|
+\end{verbatim}
+
+\subsubsection{Blocking a Win (horizontal)}
+Here the AI played column 6 to block the horizontal streak.
+\begin{verbatim}
+| | | | | | | |
+| | | | | | | |
+| | | | | | | |
+| | | | | | | |
+| | | | |*| | |
+| | |*|#|#|#|*|
+|0|1|2|3|4|5|6|
+\end{verbatim}
+
+\subsubsection{Blocking a Win (diagonal)}
+Here the AI played column 0 to block the diagonal streak.
+\begin{verbatim}
+| | | | | | | |
+| |*| | | | | |
+|*|*| | | | | |
+|#|#| | | | | |
+|#|*|#| | | | |
+|#|#|*|#| |*|*|
+|0|1|2|3|4|5|6|
+\end{verbatim}
+
+\subsubsection{Blocking a Win (gap)}
+Here the AI played column 1 to block the gap streak.
+\begin{verbatim}
+# Gap: |*| |*|*|
+
+| | | | | | | |
+| | | |#| | | |
+| | |#|*| | | |
+|#| |*|#| | | |
+|*|#|*|*| |#| |
+|*|*|#|*|#|*|#|
+|0|1|2|3|4|5|6|
+\end{verbatim}
+
 \subsubsection{Taking a Win}
+Here the AI took a diagonal win by playing in column 4.
+\begin{verbatim}
+Player red won!
+
+| | | | | |*|#|
+| | | | | |#|*|
+| | | | | |*|#|
+| | | | | |#|*|
+|#| | |*|#|*|#|
+|#| |*|#|*|#|*|
+|0|1|2|3|4|5|6|
+\end{verbatim}
+Player red won!
+
+And here the AI took a diagonal win by playing in column 2.
+\begin{verbatim}
+| | | | | | | |
+| | | | | | | |
+| |#|#| | | | |
+| |*|*|#| |*| |
+| |#|*|*|#|#| |
+| |*|#|*|*|#| |
+|0|1|2|3|4|5|6|
+\end{verbatim}
+
 \subsection{Behavior}
-A discussion of how the program behaved. Did it have any strengths or weaknesses?
-\subsubsection{Strengths}
-\subsubsection{Weaknesses}
+The AI appears to play very well. After tuning the heuristic and increasing the difficulty depth, I cannot beat it. That is coming from a Connect Four champion (of sorts), as I spent endless hours growing up playing with my father, and playing against a handheld computer Connect Four game just like the one I have created here. Although this standpoint is biased, with me being the creator of the program, I honestly think it plays with a human-like intelligence, or so it feels. It is either that, or I play like a computer. It will not yield, and it makes it very difficult to set up traps. When set to play on auto, however, it does not result in a draw, and in fact results in the same ending board each time, which forces me to conclude that it has a weakness, I just have not yet found it.
+
 \section{Conclusion}
 \end{document}
