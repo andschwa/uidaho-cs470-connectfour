@@ -100,12 +100,20 @@ class CLI(Interface):
                     print(' ', end='')
                 print('|', end='')
             print()
-        print('|' + '|'.join(str(i) for i in range(the_board.width)) + '|')
+        print('|' + '|'.join(str(col) for col in
+              range(1, the_board.width+1)) + '|')
         print()
 
     def _exit(self):
             print('Goodbye cruel world.')
             sys.exit(0)
+
+    def resign(self, color):
+        print('Player {} has resigned.'.format(color))
+        self._exit()
+
+    def computer_move(self, color, move):
+        print('Player {} is about to move in column {}.'.format(color, move))
 
     def ask_move(self, color):
         try:
@@ -116,6 +124,6 @@ class CLI(Interface):
         if input_ == 'exit':
             self._exit()
         try:
-            return int(input_)
+            return int(input_)-1
         except:
             raise error.InvalidMoveError
