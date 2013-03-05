@@ -12,13 +12,16 @@ class Player:
 
 
 class Computer(Player):
-    def __init__(self, color, colors, interface, difficulty=10):
+    def __init__(self, color, colors, interface, difficulty=1000):
         super().__init__(color, colors, interface)
         self.difficulty = difficulty
 
     def get_move(self, board):
         algorithm = Minimax(board, self.colors)
         move, value = algorithm.best_move(self.color, self.difficulty)
+        if move is None:
+            self.interface.resign(self.color)
+        self.interface.announce_move(self.color, move)
         return move
 
 

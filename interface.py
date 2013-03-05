@@ -112,7 +112,7 @@ class CLI(Interface):
         print('Player {} has resigned.'.format(color))
         self._exit()
 
-    def computer_move(self, color, move):
+    def announce_move(self, color, move):
         print('Player {} is about to move in column {}.'.format(color, move))
 
     def ask_move(self, color):
