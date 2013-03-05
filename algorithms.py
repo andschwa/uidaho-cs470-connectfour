@@ -1,4 +1,5 @@
 import random
+import sys
 
 import error
 
@@ -22,8 +23,10 @@ class Minimax():
 
         legal_moves = {}
         for column in range(self.board.width):
-            if self.board.valid_move(column, self.board.get_board()) is not None:
-                state = self.make_fake_move(self.board.get_board(), column, player)
+            if (self.board.valid_move(column, self.board.get_board())
+                is not None):
+                state = self.make_fake_move(self.board.get_board(),
+                                            column, player)
                 legal_moves[column] = -self.search(state, depth-1, opponent)
 
         best_alpha = -99999999
@@ -44,7 +47,8 @@ class Minimax():
         state[column][row] = color
         return state
 
-    def search(self, state, depth, player, alpha=-99999999, beta=99999999):
+    def search(self, state, depth, player,
+               alpha=-sys.maxsize, beta=sys.maxsize):
         opp = self._other_color(player)
         legal_moves = []
         for column in range(self.board.width):
@@ -56,7 +60,8 @@ class Minimax():
 
         if player == self.max_player:
             for move in legal_moves:
-                alpha = max(alpha, -self.search(move, depth-1, opp, alpha, beta))
+                alpha = max(alpha, -self.search(move, depth-1, opp,
+                            alpha, beta))
                 if beta <= alpha:
                     break
             return alpha
@@ -74,15 +79,12 @@ class Minimax():
                 if state[col][row] == color:
                     streaks += self.vertical_streak(col, row, state, streak)
                     streaks += self.horizontal_streak(col, row, state, streak)
-                    streaks += self.diagonal_check(col, row, state, streak)
+                    streaks += self.diagonal_streak(col, row, state, streak)
         return streaks
 
     def game_over(self, state):
-        if (self.check_for_streak(state, self.colors[0], 4) >= 1 or
-            self.check_for_streak(state, self.colors[1], 4) >= 1):
-            return True
-        else:
-            return False
+        return (self.check_for_streak(state, self.colors[0], 4) >= 1 or
+                self.check_for_streak(state, self.colors[1], 4) >= 1)
 
     def value(self, state, color):
         player = color
@@ -91,78 +93,68 @@ class Minimax():
         my_threes = self.check_for_streak(state, player, 3)
         my_twos = self.check_for_streak(state, player, 2)
         opp_fours = self.check_for_streak(state, opponent, 4)
-        #opp_threes = self.check_for_streak(state, opponent, 3)
-        #opp_twos = self.check_for_streak(state, opponent, 2)
+        opp_threes = self.check_for_streak(state, opponent, 3)
+        opp_twos = self.check_for_streak(state, opponent, 2)
         if opp_fours > 0:
-            return -100000
+            return sys.maxsize
         else:
-            return my_fours*100000 + my_threes*1000 + my_twos*10
+            return (my_fours*10000000 + my_threes*1000 + my_twos*10
+                    - opp_threes*10000 - opp_twos*100)
 
-    def vertical_streak(self, col, row, state, streak):
-        consecutiveCount = 0
-        for i in range(row, self.board.height):
-            if state[col][i] == state[col][row]:
-                consecutiveCount += 1
+    def vertical_streak(self, icol, irow, state, streak):
+        count = 0
+        for row in range(irow, self.board.height):
+            if state[icol][row] == state[icol][irow]:
+                count += 1
             else:
                 break
-        for i in range(row, 0, -1):
-            if state[col][i] == state[col][row]:
-                consecutiveCount += 1
+        for row in range(irow, -1, -1):
+            if state[icol][row] == state[icol][irow]:
+                count += 1
             else:
                 break
+        return int(count >= streak)
 
-        if consecutiveCount >= streak:
-            return 1
-        else:
-            return 0
-
-    def horizontal_streak(self, col, row, state, streak):
-        consecutiveCount = 0
-        for j in range(col, self.board.width):
-            if state[j][row] == state[col][row]:
-                consecutiveCount += 1
+    def horizontal_streak(self, icol, irow, state, streak):
+        count = 0
+        for col in range(icol, self.board.width):
+            if state[col][irow] == state[icol][irow]:
+                count += 1
             else:
                 break
-        for j in range(col, 0, -1):
-            if state[j][row] == state[col][row]:
-                consecutiveCount += 1
+        for col in range(icol, -1, -1):
+            if state[col][irow] == state[icol][irow]:
+                count += 1
             else:
                 break
+        return int(count >= streak)
 
-        if consecutiveCount >= streak:
-            return 1
-        else:
-            return 0
-
-    def diagonal_check(self, col, row, state, streak):
+    def diagonal_streak(self, icol, irow, state, streak):
         total = 0
         # check for diagonals with positive slope
-        consecutiveCount = 0
-        j = col
-        for i in range(row, self.board.height):
-            if j > 6:
+        count = 0
+        col = icol
+        for row in range(irow, self.board.height):
+            if col >= self.board.width or col < 0:
                 break
-            elif state[j][i] == state[col][row]:
-                consecutiveCount += 1
+            if state[col][row] == state[icol][irow]:
+                count += 1
             else:
                 break
-            j += 1  # increment column when row is incremented
-        if consecutiveCount >= streak:
-            total += 1
+            col += 1  # increment column when row is incremented
+        total += int(count >= streak)
 
         # check for diagonals with negative slope
-        consecutiveCount = 0
-        j = col
-        for i in range(row, -1, -1):
-            if j > 6:
+        count = 0
+        col = icol
+        for row in range(irow, -1, -1):
+            if col >= self.board.width or col < 0:
                 break
-            elif state[j][i] == state[col][row]:
-                consecutiveCount += 1
+            elif state[col][row] == state[icol][irow]:
+                count += 1
             else:
                 break
-            j += 1  # increment column when row is incremented
-
-        if consecutiveCount >= streak:
-            total += 1
+            col += 1  # increment column when row is incremented
+        total += int(count >= streak)
 
         return total
