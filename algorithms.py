@@ -79,17 +79,14 @@ class Minimax():
     def value(self, state, color):
         player = color
         opponent = self._other_color(player)
-        my_fours = self.check_for_streak(state, player, 4)
-        my_threes = self.check_for_streak(state, player, 3)
-        my_twos = self.check_for_streak(state, player, 2)
-        opp_fours = self.check_for_streak(state, opponent, 4)
-        opp_threes = self.check_for_streak(state, opponent, 3)
-        opp_twos = self.check_for_streak(state, opponent, 2)
-        if opp_fours > 0:
+        fours = self.check_for_streak(state, player, 4)
+        threes = self.check_for_streak(state, player, 3)
+        twos = self.check_for_streak(state, player, 2)
+        losses = self.check_for_streak(state, opponent, 4)
+        if losses > 0:
             return -sys.maxsize
         else:
-            return (my_fours*10000000 + my_threes*1000 + my_twos*10
-                    - opp_threes*10000 - opp_twos*100)
+            return (fours*16 + threes*4 + twos*2)
 
     def vertical_streak(self, icol, irow, state, streak):
         count = 0
