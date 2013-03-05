@@ -47,9 +47,9 @@ class CLI(Interface):
 
     def _get_symbol(self, color):
         if color == self.colors[0]:
-            return '#'
+            return 'O'
         if color == self.colors[1]:
-            return '*'
+            return 'X'
 
     def _ask_first(self, players):
         color_string = "Which player shall go first: {} or {}? "
