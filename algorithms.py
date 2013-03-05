@@ -1,4 +1,4 @@
-import random
+import operator
 import sys
 
 import error
@@ -28,17 +28,7 @@ class Minimax():
                 state = self.make_fake_move(self.board.get_board(),
                                             column, player)
                 legal_moves[column] = -self.search(state, depth-1, opponent)
-
-        best_alpha = -99999999
-        best_move = None
-        moves = list(legal_moves.items())
-        random.shuffle(moves)
-        for move, alpha in moves:
-            if alpha >= best_alpha:
-                best_alpha = alpha
-                best_move = move
-
-        return best_move, best_alpha
+        return max(legal_moves.items(), key=operator.itemgetter(1))
 
     def make_fake_move(self, state, column, color):
         row = self.board.valid_move(column, state)
@@ -96,7 +86,7 @@ class Minimax():
         opp_threes = self.check_for_streak(state, opponent, 3)
         opp_twos = self.check_for_streak(state, opponent, 2)
         if opp_fours > 0:
-            return sys.maxsize
+            return -sys.maxsize
         else:
             return (my_fours*10000000 + my_threes*1000 + my_twos*10
                     - opp_threes*10000 - opp_twos*100)
