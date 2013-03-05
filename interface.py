@@ -84,7 +84,6 @@ class CLI(Interface):
             print('It was a draw!')
         else:
             print('Player {} won!'.format(winner.color))
-        board.print_board()
 
     def print_board(self, the_board):
         print()
