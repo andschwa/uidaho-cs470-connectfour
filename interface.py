@@ -73,7 +73,7 @@ class CLI(Interface):
             players[0].color, self._get_symbol(players[0].color),
             players[1].color, self._get_symbol(players[1].color)))
         board.print_board()
-        print('Your columns are 0 to 6, left to right.')
+        print('Your columns are 1 to 7, left to right.')
         first_player = None
         while first_player is None:
             first_player = self._ask_first(players)
@@ -112,7 +112,7 @@ class CLI(Interface):
         self._exit()
 
     def announce_move(self, color, move):
-        print('Player {} is about to move in column {}.'.format(color, move))
+        print('Player {} is about to move in column {}.'.format(color, move+1))
 
     def ask_move(self, color):
         try:
